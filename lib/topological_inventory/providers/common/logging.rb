@@ -32,6 +32,29 @@ module TopologicalInventory
             send(severity, ext_message)
           end
         end
+
+        def level=(severity)
+          if severity.is_a?(Integer)
+            @level = severity
+          else
+            case severity.to_s.downcase
+            when 'debug'
+              @level = self.class::DEBUG
+            when 'info'
+              @level = self.class::INFO
+            when 'warn'
+              @level = self.class::WARN
+            when 'error'
+              @level = self.class::ERROR
+            when 'fatal'
+              @level = self.class::FATAL
+            when 'unknown'
+              @level = self.class::UNKNOWN
+            else
+              raise ArgumentError, "invalid log level: #{severity}"
+            end
+          end
+        end
       end
 
       class Logger < ManageIQ::Loggers::CloudWatch
